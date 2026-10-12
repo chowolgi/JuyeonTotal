@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주연토탈인테리어 | 도배 전문 시공팀</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Quill WYSIWYG Editor CSS -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans KR"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: '#8B7355', 
+                        accent: '#1E3A8A', // 신뢰감을 주는 딥블루
+                        accentLight: '#F0F4F8', 
+                        naver: '#03C75A', // 네이버 그린
+                        dark: '#222222',
+                        light: '#F8F6F4',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; color: #333; scroll-behavior: smooth; }
+        .bg-hero {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1560448205-4d9b3e6bb6db?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+        .faq-item.active .faq-answer { max-height: 500px; }
+        .faq-item.active .faq-icon { transform: rotate(180deg); }
+
+        .ql-container { font-family: 'Noto Sans KR', sans-serif; font-size: 16px; min-height: 400px; border-radius: 0 0 8px 8px; border-color: #e2e8f0 !important; }
+        .ql-editor { padding: 20px; }
+        .ql-toolbar { border-radius: 8px 8px 0 0; background: #f8fafc; border-color: #e2e8f0 !important; }
+
+        .blog-content h1 { font-size: 1.8em; font-weight: bold; margin-bottom: 0.5em; }
+        .blog-content h2 { font-size: 1.5em; font-weight: bold; margin-bottom: 0.5em; }
+        .blog-content p { margin-bottom: 1em; line-height: 1.8; }
+        .blog-content img { max-width: 100%; height: auto; border-radius: 8px; margin: 1em 0; }
+    </style>
+</head>
+<body class="bg-gray-50 flex flex-col min-h-screen pt-20">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm fixed top-0 w-full z-50 h-20 flex items-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex justify-between items-center">
+            <div class="flex-shrink-0 cursor-pointer" onclick="navigate('home')">
+                <h1 class="text-2xl font-black text-brand tracking-tight flex items-center gap-2">
+                    <i class="fas fa-paint-roller"></i> 주연토탈인테리어
+                </h1>
+            </div>
+            
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="#" onclick="navigate('home')" class="text-gray-700 hover:text-brand font-medium transition">홈</a>
+                <a href="#about" onclick="navigate('home')" class="text-gray-700 hover:text-brand font-medium transition">우리의 이야기</a>
+                <a href="#" onclick="navigate('portfolio')" class="text-gray-700 hover:text-brand font-medium transition">시공사례</a>
+                <a href="https://map.naver.com/p/entry/place/1952723856?placePath=%252Fhome%253Fentry%253Dplt&searchType=place&lng=126.8651766&lat=37.3333500" target="_blank" class="text-gray-700 hover:text-brand font-medium transition">오시는 길</a>
+                <a href="#" onclick="navigate('admin')" class="text-gray-400 hover:text-brand text-sm"><i class="fas fa-lock"></i> 관리자</a>
+                <!-- Header CTA -->
+                <a href="tel:010-3704-3648" class="bg-brand text-white px-5 py-2.5 rounded-full font-bold hover:bg-[#735e45] transition shadow-md flex items-center">
+                    <i class="fas fa-phone-alt mr-2"></i>무료 상담
+                </a>
+            </nav>
+            
+            <div class="md:hidden flex items-center gap-4">
+                <a href="tel:010-3704-3648" class="bg-brand text-white p-2 rounded-full"><i class="fas fa-phone-alt"></i></a>
+                <button id="mobile-menu-btn" class="text-gray-700 focus:outline-none"><i class="fas fa-bars text-2xl"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden fixed top-20 left-0 w-full bg-white shadow-lg z-40 border-t">
+        <a href="#" onclick="navigate('home')" class="block px-6 py-4 text-gray-800 border-b">홈</a>
+        <a href="#" onclick="navigate('portfolio')" class="block px-6 py-4 text-gray-800 border-b">시공사례</a>
+        <a href="https://map.naver.com/p/entry/place/1952723856?placePath=%252Fhome%253Fentry%253Dplt&searchType=place&lng=126.8651766&lat=37.3333500" target="_blank" class="block px-6 py-4 text-gray-800 border-b">오시는 길</a>
+        <a href="#" onclick="navigate('admin')" class="block px-6 py-4 text-gray-400">관리자 모드</a>
+    </div>
+
+    <main class="flex-grow">
+        
+        <!-- ================= 1. HOME PAGE ================= -->
+        <div id="page-home" class="page active">
+            <!-- Hero -->
+            <section class="bg-hero min-h-[650px] flex items-center relative">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full py-20 text-center md:text-left">
+                    <span class="inline-block py-1 px-3 rounded-full bg-white/20 text-white backdrop-blur-sm text-sm font-bold mb-4 border border-white/30">
+                        직접 견적, 직접 시공하는 도배 전문팀
+                    </span>
+                    <h2 class="text-4xl md:text-6xl font-black text-white mb-6 leading-[1.3] break-keep">
+                        도배의 바른 기준,<br>
+                        주연토탈인테리어
+                    </h2>
+                    <p class="text-lg md:text-xl text-gray-200 mb-10 font-light break-keep max-w-2xl">
+                        <strong class="font-bold text-white">주연토탈인테리어입니다.</strong><br>
+                        외주 없이 100% 직접 견적, 직접 시공합니다.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                        <a href="http://talk.naver.com/w40v97?frm=mnmb&frm=nmb_detail" target="_blank" class="bg-naver text-white px-8 py-4 rounded-xl text-lg font-bold hover:bg-[#02b350] transition shadow-xl flex items-center justify-center">
+                            온라인 1:1 상담 <i class="fas fa-comment-dots ml-2"></i>
+                        </a>
+                        <a href="tel:010-3704-3648" class="bg-white text-gray-900 px-8 py-4 rounded-xl text-lg font-bold hover:bg-gray-100 transition shadow-xl flex items-center justify-center">
+                            <i class="fas fa-phone-volume mr-2 text-brand"></i> 바로 전화 상담
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 철학 & 인사말 섹션 -->
+            <section id="about" class="py-24 bg-white relative">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex flex-col lg:flex-row gap-16 items-center">
+                        <div class="lg:w-1/2">
+                            <div class="relative rounded-3xl overflow-hidden shadow-2xl">
+                                <img src="https://images.unsplash.com/photo-1581858726788-75bc0f6a952d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="우리의 이야기" class="w-full h-[650px] object-cover">
+                                <div class="absolute inset-0 bg-black/10"></div>
+                                <div class="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-sm p-8 rounded-2xl shadow-lg">
+                                    <h4 class="text-brand font-bold mb-4 text-xl">우리가 도배를 다시 생각한 이유</h4>
+                                    <p class="text-gray-700 text-[15px] leading-relaxed break-keep">
+                                        도배는 늘 이런 일이었습니다. 견적은 부르는 게 값이고, 상담은 어딘가 강압적이고, 하자가 생겨도 말 한마디 꺼내기 어려운. 돈은 고객이 내는데, 정작 대우받는 기분은 들지 않았습니다.<br><br>
+                                        주연토탈인테리어는 그게 당연하지 않다고 생각합니다. <strong>정직한 견적, 편안한 상담, 끝까지 책임지는 시공.</strong> 저희에겐 이게 특별한 서비스가 아니라 기본입니다. 도배, 그 기본을 지키는 것만으로도 기준을 바꿀 수 있다고 믿습니다.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="lg:w-1/2">
+                            <span class="text-brand font-bold text-sm tracking-widest mb-2 block">CEO MESSAGE</span>
+                            <h2 class="text-3xl md:text-4xl font-black text-gray-900 mb-8 leading-tight break-keep">
+                                "되는 건 된다고,<br>안 되는 건 안 된다고"
+                            </h2>
+                            
+                            <div class="space-y-6 text-gray-600 font-light text-lg leading-relaxed break-keep">
+                                <p>안녕하세요, 주연토탈인테리어 대표입니다.</p>
+                                <p>솔직히 먼저 말씀드릴 게 있습니다. 도배에는 한계가 있습니다. 벽과 집의 상태에 따라, 아무리 실력이 좋아도 안 되는 건 안 됩니다. 저는 그걸 <strong>"안되는 건 안됩니다"</strong>라고 정직하게 말씀드리는 사람입니다.</p>
+                                <p>제가 정말 바꾸고 싶은 건 따로 있습니다. 도배 시공은 아는 사람이 없으면 늘 불안합니다. <em>“이거 나만 비싸게 하는 거 아닐까”, “혹시 바가지 쓰는 건 아닐까”</em> 하는 마음이요. 정보가 없다는 이유만으로 불안해야 하는 게 저는 제일 안타까웠습니다.</p>
+                                <p>그래서 주연토탈인테리어는 “무조건 다 된다”고 말하지 않습니다. 되는 건 된다고, 안 되는 건 안 된다고 — <strong>옆에 아는 지인이 알려주듯 정직하게 말씀드립니다.</strong></p>
+                                <p>부풀리지 않고, 안 될 걸 될 것처럼 팔지 않는 것. 그 정직함이 쌓여 '도배는 주연토탈인테리어'가 되는 것, 그게 제가 만들고 싶은 기준입니다.</p>
+                            </div>
+                            
+                            <div class="mt-10 pt-8 border-t border-gray-200">
+                                <p class="font-bold text-gray-900 text-xl">주연토탈인테리어 대표 올림</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MATERIALS: 친환경 자재 섹션 (카드 삭제됨) -->
+            <section class="py-24 bg-accentLight">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="mb-12 md:mb-16">
+                        <span class="text-accent font-black text-sm tracking-widest mb-3 block">MATERIALS</span>
+                        <h2 class="text-3xl md:text-5xl font-black text-gray-900 mb-6 leading-tight break-keep">
+                            <span class="text-accent">전 제품 친환경 인증.</span><br>안심할 수 있는 자재만 사용합니다
+                        </h2>
+                        <p class="text-gray-600 text-lg md:text-xl max-w-3xl leading-relaxed break-keep mb-10">
+                            벽지부터 풀·본드까지 전 자재 친환경 인증 라인만 사용하고, 음식점의 원산지 표시처럼 어떤 자재를 쓰는지 묻지 않으셔도 먼저 공개합니다.
+                        </p>
+                    </div>
+
+                    <div class="bg-accent rounded-2xl p-6 md:p-8 flex items-center shadow-lg transform hover:scale-[1.01] transition duration-300">
+                        <h3 class="text-white text-2xl md:text-3xl font-bold tracking-tight">몸에 나쁜 건 현장에 들이지 않습니다.</h3>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Zero Prep Process -->
+            <section class="py-24 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-16">
+                        <h3 class="text-brand font-bold text-sm tracking-widest mb-2">HASSLE-FREE PROCESS</h3>
+                        <h2 class="text-3xl md:text-4xl font-black text-gray-900 mb-4 break-keep">
+                            도배 준비물은 없습니다.<br>주연이 다 알아서 합니다.
+                        </h2>
+                        <p class="text-gray-500 text-lg">오래되고 낡은 벽지라도 걱정하지 마세요.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="bg-light p-8 rounded-2xl border border-gray-100 hover:shadow-lg transition">
+                            <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center text-brand text-2xl mb-6 shadow-sm"><i class="fas fa-couch"></i></div>
+                            <h4 class="text-xl font-bold text-gray-900 mb-3">꼼꼼한 보양 작업</h4>
+                            <p class="text-gray-600 font-light break-keep">기존 집기 손상 방지를 위해 철저하게 보양합니다.</p>
+                        </div>
+                        <div class="bg-light p-8 rounded-2xl border border-gray-100 hover:shadow-lg transition">
+                            <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center text-brand text-2xl mb-6 shadow-sm"><i class="fas fa-trash-alt"></i></div>
+                            <h4 class="text-xl font-bold text-gray-900 mb-3">기존 벽지 철거</h4>
+                            <p class="text-gray-600 font-light break-keep">기존 벽지를 뜯어내고 기초부터 잡습니다.</p>
+                        </div>
+                        <div class="bg-light p-8 rounded-2xl border border-gray-100 hover:shadow-lg transition">
+                            <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center text-brand text-2xl mb-6 shadow-sm"><i class="fas fa-layer-group"></i></div>
+                            <h4 class="text-xl font-bold text-gray-900 mb-3">필요 시 초배지 작업</h4>
+                            <p class="text-gray-600 font-light break-keep">초배 작업 필요 시 부직포 또는 아이텍스를 사용하여 띄움 시공을 진행합니다.</p>
+                        </div>
+                        <div class="bg-light p-8 rounded-2xl border border-gray-100 hover:shadow-lg transition">
+                            <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center text-brand text-2xl mb-6 shadow-sm"><i class="fas fa-broom"></i></div>
+                            <h4 class="text-xl font-bold text-gray-900 mb-3">뒷정리 깔끔하게</h4>
+                            <p class="text-gray-600 font-light break-keep">폐기물 수거 및 바닥 정리까지 확실하게 마무리합니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recent Portfolio (Home Preview) -->
+            <section class="py-24 bg-gray-50 border-t border-gray-200">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex flex-col md:flex-row justify-between items-end mb-12">
+                        <div>
+                            <h3 class="text-brand font-bold text-sm tracking-widest mb-2">RECENT PROJECTS</h3>
+                            <h2 class="text-3xl md:text-4xl font-black text-gray-900">최근 시공 사례</h2>
+                        </div>
+                        <button onclick="navigate('portfolio')" class="mt-4 md:mt-0 text-brand font-bold hover:text-[#735e45] transition flex items-center">
+                            전체 시공사례 보기 <i class="fas fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                    <!-- Home Preview Grid -->
+                    <div id="home-portfolio-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+                </div>
+            </section>
+
+            <!-- Strong CTA Banners -->
+            <section class="py-12 bg-white max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- CTA 1: 공식 블로그(외부링크) 바로가기 -->
+                    <a href="https://blog.naver.com/ccs3441" target="_blank" class="bg-accent rounded-3xl p-8 md:p-12 text-white relative overflow-hidden shadow-xl flex flex-col justify-center transform hover:scale-[1.02] transition block">
+                        <div class="relative z-10">
+                            <span class="bg-white/20 px-3 py-1 rounded text-xs font-bold mb-4 inline-block">시공 사례</span>
+                            <h3 class="text-2xl md:text-3xl font-black mb-3 break-keep">더 자세한 시공 사례를<br>확인하고 싶으세요?</h3>
+                            <p class="text-blue-200 mb-8 font-light">주연토탈인테리어의 꼼꼼한 도배 시공 과정을 확인해보세요.</p>
+                            <span class="inline-flex bg-white text-accent px-6 py-3 rounded-lg font-bold items-center shadow">
+                                <i class="fas fa-book-open mr-2"></i> 공식 블로그 구경하기
+                            </span>
+                        </div>
+                        <i class="fas fa-images absolute -right-6 -bottom-6 text-[150px] text-white opacity-10 transform -rotate-12"></i>
+                    </a>
+
+                    <!-- CTA 2: 네이버 톡톡 상담 -->
+                    <a href="http://talk.naver.com/w40v97?frm=mnmb&frm=nmb_detail" target="_blank" class="bg-naver rounded-3xl p-8 md:p-12 text-white relative overflow-hidden shadow-xl flex flex-col justify-center transform hover:scale-[1.02] transition block">
+                        <div class="relative z-10">
+                            <span class="bg-white/20 px-3 py-1 rounded text-xs font-bold mb-4 inline-block text-white">온라인 1:1 상담</span>
+                            <h3 class="text-2xl md:text-3xl font-black mb-3 break-keep">시공 일정부터<br>견적 조율까지</h3>
+                            <p class="text-white/80 mb-8 font-light">일하는 동안 답변이 늦어질 수 있어 빠른 상담은 전화를 부탁드립니다.</p>
+                            <span class="inline-flex bg-white text-naver px-6 py-3 rounded-lg font-bold items-center shadow">
+                                <i class="fas fa-comment-dots mr-2"></i> 네이버 톡톡 상담하기
+                            </span>
+                        </div>
+                        <i class="fas fa-comment-dots absolute -right-6 -bottom-6 text-[150px] text-white opacity-10 transform -rotate-12"></i>
+                    </a>
+
+                </div>
+            </section>
+        </div>
+
+
+        <!-- ================= 2. PORTFOLIO LIST PAGE ================= -->
+        <div id="page-portfolio" class="page bg-gray-50 min-h-screen py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-black text-gray-900 mb-4">공식 블로그 시공 사례</h2>
+                    <p class="text-gray-600 text-lg">주연토탈인테리어의 꼼꼼한 마감 실력을 확인해 보세요.</p>
+                </div>
+                <div id="portfolio-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+            </div>
+        </div>
+
+
+        <!-- ================= 3. POST DETAIL (BLOG VIEW) PAGE ================= -->
+        <div id="page-post-detail" class="page bg-white min-h-screen py-12">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <button onclick="navigate('portfolio')" class="text-brand font-bold mb-8 hover:text-gray-900 transition flex items-center">
+                    <i class="fas fa-arrow-left mr-2"></i> 목록으로 돌아가기
+                </button>
+                
+                <div class="mb-10 border-b pb-8">
+                    <span id="detail-category" class="inline-block bg-gray-100 text-brand px-3 py-1 rounded text-sm font-bold mb-4">카테고리</span>
+                    <h1 id="detail-title" class="text-3xl md:text-4xl font-black text-gray-900 mb-4 leading-tight">게시물 제목</h1>
+                    <p id="detail-date" class="text-gray-500 text-sm"><i class="far fa-clock mr-1"></i> 작성일</p>
+                </div>
+
+                <div class="mb-12 rounded-2xl overflow-hidden bg-gray-50">
+                    <img id="detail-image" src="" alt="대표 이미지" class="w-full object-cover max-h-[500px]">
+                </div>
+
+                <div id="detail-content" class="blog-content text-gray-800 text-lg"></div>
+                
+                <div class="mt-16 text-center border-t pt-10">
+                    <p class="text-gray-500 mb-6">해당 시공 현장과 비슷하게 우리 집도 시공하고 싶다면?</p>
+                    <a href="http://talk.naver.com/w40v97?frm=mnmb&frm=nmb_detail" target="_blank" class="inline-block bg-naver hover:bg-[#02b350] text-white px-8 py-4 rounded-full font-bold shadow-lg transition">
+                        <i class="fas fa-comment-dots mr-2"></i> 톡톡으로 상담 예약하기
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ================= 4. ADMIN PAGE (NAVER BLOG STYLE) ================= -->
+        <div id="page-admin" class="page bg-gray-50 min-h-[800px] py-12">
+            <div class="max-w-5xl mx-auto px-4">
+                <div class="flex justify-between items-center mb-8 border-b pb-4">
+                    <h2 class="text-2xl font-black text-gray-800"><i class="fas fa-pen-nib text-naver mr-2"></i>블로그형 시공사례 관리자</h2>
+                    <button id="btnLogout" class="hidden text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded transition font-bold">로그아웃</button>
+                </div>
+
+                <div id="authSection" class="bg-white p-8 rounded-2xl shadow-sm border max-w-md mx-auto">
+                    <h3 class="text-lg font-bold mb-4 text-center">관리자 로그인</h3>
+                    <div class="space-y-4">
+                        <input type="email" id="loginEmail" class="w-full px-4 py-3 bg-gray-50 border rounded-lg focus:outline-none focus:border-naver" placeholder="이메일 (admin@juyeon.com)">
+                        <input type="password" id="loginPw" class="w-full px-4 py-3 bg-gray-50 border rounded-lg focus:outline-none focus:border-naver" placeholder="비밀번호 (1234)">
+                        <button id="btnLogin" class="w-full bg-naver text-white py-3 rounded-lg font-bold hover:bg-[#02b350] transition text-lg">로그인</button>
+                    </div>
+                </div>
+
+                <div id="dashboardSection" class="hidden">
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border mb-8">
+                        <h3 class="text-2xl font-bold mb-6 text-gray-800">새 글 쓰기</h3>
+                        <form id="writeForm" class="space-y-6">
+                            <div class="flex flex-col md:flex-row gap-4">
+                                <select id="postCategory" class="w-full md:w-1/4 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-naver">
+                                    <option value="전체 실크 도배">전체 실크 도배</option>
+                                    <option value="전체 합지 도배">전체 합지 도배</option>
+                                    <option value="부분 도배">부분 도배</option>
+                                </select>
+                                <input type="text" id="postTitle" required class="w-full md:w-3/4 px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:border-naver" placeholder="제목을 입력해 주세요.">
+                            </div>
+                            
+                            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                <label class="block text-sm font-bold text-gray-700 mb-2"><i class="fas fa-image mr-1"></i> 썸네일 파일 첨부</label>
+                                <input type="file" id="postImageFile" accept="image/*" class="block w-full text-sm">
+                                <img id="imagePreview" class="mt-4 hidden h-40 w-auto object-cover rounded-lg shadow-sm">
+                            </div>
+
+                            <div>
+                                <input type="text" id="postSummary" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-naver" placeholder="홈페이지 목록에 보여질 짧은 시공 요약을 적어주세요.">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-2">본문 작성</label>
+                                <div id="editor-container"></div>
+                            </div>
+
+                            <div class="flex justify-end pt-4 border-t border-gray-100">
+                                <button type="submit" class="bg-naver text-white px-10 py-3 rounded-lg font-bold">발행하기</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#111111] text-gray-400 py-12 border-t-4 border-brand">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-start gap-8">
+                <div>
+                    <h3 class="text-xl font-bold text-white mb-4"><i class="fas fa-paint-roller text-brand mr-2"></i>주연토탈인테리어</h3>
+                    <div class="space-y-2 text-sm font-light">
+                        <p><strong class="text-gray-300 w-16 inline-block">대표번호</strong> <span class="text-brand font-bold text-base">010-3704-3648</span></p>
+                        <p><strong class="text-gray-300 w-16 inline-block">주소</strong> 경기 안산시 상록구 정재로4길 1-1 1층 104호</p>
+                    </div>
+                </div>
+                <div class="text-left md:text-right text-xs text-gray-500 mt-4 md:mt-0">
+                    <p class="mb-2"><strong class="text-gray-300">주연토탈인테리어는</strong> 완벽한 마감을 자랑하는 직영 시공팀입니다.</p>
+                    <p>&copy; 2026 주연토탈인테리어. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Fixed Mobile Bottom CTA -->
+    <div class="md:hidden fixed bottom-0 left-0 w-full bg-white border-t shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-50 flex">
+        <a href="tel:010-3704-3648" class="flex-1 py-4 text-center text-gray-800 font-bold border-r bg-light active:bg-gray-200">
+            <i class="fas fa-phone-alt text-brand mr-1"></i> 전화 상담
+        </a>
+        <a href="http://talk.naver.com/w40v97?frm=mnmb&frm=nmb_detail" target="_blank" class="flex-1 py-4 text-center text-white font-bold bg-naver active:bg-[#02b350]">
+            <i class="fas fa-comment-dots mr-1"></i> 온라인 상담
+        </a>
+    </div>
+
+    <!-- Quill WYSIWYG Editor JS -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+    <script>
+        // --- 1. 데이터베이스 세팅 ---
+        let mockPosts = [
+            {
+                id: '1',
+                category: '전체 실크 도배',
+                title: '안산 상록구 32평형 무몰딩 실크 도배',
+                summary: '이음새가 보이지 않는 꼼꼼한 맞댐 시공으로 페인트 칠을 한 듯한 깔끔한 화이트 톤 거실을 완성했습니다.',
+                image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                content: '<h1>32평형 실크 도배 현장입니다.</h1><p>전문 도배팀이 투입되어 평탄화 작업을 진행했습니다. 이후 꼼꼼하게 부직포 띄움 시공을 진행하여 면을 고르게 만들었습니다.</p><p><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800"></p><p>완성된 거실의 모습입니다. 새집처럼 환해졌습니다.</p>',
+                date: Date.now() - 100000
+            },
+            {
+                id: '2',
+                category: '부분 도배',
+                title: '짐이 있는 상태에서 진행한 거실/안방 부분 도배',
+                summary: '살고 계신 집이라 짐 이동과 비닐 보양 작업에 특히 신경을 썼습니다. 먼지 날림 없이 하루 만에 마무리되었습니다.',
+                image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                content: '<h2>거주 중 도배는 보양이 생명입니다.</h2><p>가전제품과 가구에 풀이나 먼지가 묻지 않도록 꼼꼼하게 커버링 후 작업을 시작했습니다.</p>',
+                date: Date.now() - 200000
+            }
+        ];
+
+        // --- 2. SPA 라우팅 ---
+        function navigate(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active');
+            window.scrollTo(0, 0);
+            document.getElementById('mobile-menu').classList.add('hidden');
+
+            if(pageId === 'home') renderHomePosts();
+            if(pageId === 'portfolio') renderPortfolioPage();
+        }
+
+        // --- 3. 게시물 생성 함수 ---
+        function createCardHTML(post) {
+            return `
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow border border-gray-100 flex flex-col h-full group cursor-pointer" onclick="viewPost('${post.id}')">
+                    <div class="relative h-60 overflow-hidden bg-gray-100">
+                        <img src="${post.image}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-4 left-4 bg-brand text-white px-3 py-1 text-xs font-bold rounded shadow-sm">
+                            ${post.category}
+                        </div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-brand transition line-clamp-2">${post.title}</h3>
+                        <p class="text-gray-500 text-sm mb-6 leading-relaxed flex-grow line-clamp-3">${post.summary}</p>
+                        <div class="pt-4 border-t border-gray-100 flex justify-between items-center text-sm font-bold text-gray-700 group-hover:text-brand transition">
+                            블로그에서 자세히 보기 <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderHomePosts() {
+            const grid = document.getElementById('home-portfolio-grid');
+            grid.innerHTML = '';
+            mockPosts.sort((a, b) => b.date - a.date).slice(0, 3).forEach(post => {
+                grid.innerHTML += createCardHTML(post);
+            });
+        }
+
+        function renderPortfolioPage() {
+            const grid = document.getElementById('portfolio-grid');
+            grid.innerHTML = '';
+            mockPosts.sort((a, b) => b.date - a.date).forEach(post => {
+                grid.innerHTML += createCardHTML(post);
+            });
+        }
+
+        function viewPost(postId) {
+            const post = mockPosts.find(p => p.id === postId);
+            if(post) {
+                document.getElementById('detail-category').textContent = post.category;
+                document.getElementById('detail-title').textContent = post.title;
+                
+                const date = new Date(post.date);
+                document.getElementById('detail-date').innerHTML = `<i class="far fa-clock mr-1"></i> ${date.getFullYear()}년 ${date.getMonth()+1}월 ${date.getDate()}일`;
+                
+                document.getElementById('detail-image').src = post.image;
+                document.getElementById('detail-content').innerHTML = post.content || `<p>${post.summary}</p>`;
+                
+                navigate('post-detail');
+            }
+        }
+
+        setTimeout(renderHomePosts, 100);
+
+        // --- 4. 관리자 에디터 세팅 ---
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        function updateAdminUI(isLoggedIn) {
+            document.getElementById('authSection').classList.toggle('hidden', isLoggedIn);
+            document.getElementById('dashboardSection').classList.toggle('hidden', !isLoggedIn);
+            document.getElementById('btnLogout').classList.toggle('hidden', !isLoggedIn);
+        }
+
+        document.getElementById('btnLogin').addEventListener('click', () => { updateAdminUI(true); });
+        document.getElementById('btnLogout').addEventListener('click', () => updateAdminUI(false));
+
+        var quill = new Quill('#editor-container', {
+            theme: 'snow',
+            placeholder: '글감과 함께 시공 현장을 자세히 기록해보세요!',
+            modules: { toolbar: [ [{ 'header': [1, 2, 3, false] }], ['bold', 'italic', 'underline'], [{'color':[]}], ['image', 'clean'] ] }
+        });
+
+        let uploadedImg = '';
+        document.getElementById('postImageFile').addEventListener('change', e => {
+            if(e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = ev => { uploadedImg = ev.target.result; document.getElementById('imagePreview').src = uploadedImg; document.getElementById('imagePreview').classList.remove('hidden'); }
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
+        document.getElementById('writeForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            if(!uploadedImg) return alert('썸네일 사진 첨부 필수!');
+            mockPosts.unshift({
+                id: Date.now().toString(),
+                category: document.getElementById('postCategory').value,
+                title: document.getElementById('postTitle').value,
+                summary: document.getElementById('postSummary').value,
+                image: uploadedImg,
+                content: quill.root.innerHTML,
+                date: Date.now()
+            });
+            alert('블로그형 시공 사례가 성공적으로 발행되었습니다!');
+            e.target.reset(); quill.setContents([]); document.getElementById('imagePreview').classList.add('hidden'); uploadedImg = '';
+            renderHomePosts(); navigate('home');
+        });
+    </script>
+</body>
+</html>
