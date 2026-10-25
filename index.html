@@ -510,16 +510,48 @@
         ];
 
         // 브라우저 캐시에 저장된 데이터가 있으면 불러오고, 없으면 기본값 사용
-        let mockPosts = JSON.parse(localStorage.getItem('juyeon_posts'));
+let mockPosts = [];
+
+// 서버(Cloudflare KV)에서 데이터 불러오기
+async function loadPosts() {
+    try {
+        const response = await fetch('/api/posts');
+        mockPosts = await response.json();
+        
+        // 처음이라 데이터가 없으면 기본값 세팅
         if (!mockPosts || mockPosts.length === 0) {
             mockPosts = DEFAULT_POSTS;
-            savePosts();
         }
+    } catch (e) {
+        console.error("데이터 불러오기 실패:", e);
+        mockPosts = DEFAULT_POSTS;
+    }
+    
+    // 데이터 불러온 후 화면에 그리기
+    renderHomePosts();
+    renderPortfolioPage();
+    if (!document.getElementById('dashboardSection').classList.contains('hidden')) {
+        renderAdminPosts();
+    }
+}
 
-        // 로컬스토리지에 데이터 저장하는 함수
-        function savePosts() {
-            localStorage.setItem('juyeon_posts', JSON.stringify(mockPosts));
-        }
+// 서버(Cloudflare KV)에 데이터 저장하기
+async function savePosts() {
+    try {
+        await fetch('/api/posts', {
+            method: 'POST',
+            body: JSON.stringify(mockPosts)
+        });
+    } catch (e) {
+        alert("저장에 실패했습니다. 인터넷 연결을 확인해주세요.");
+    }
+}
+
+// 스크립트 맨 아래에 있던 사이트 첫 접속 시 실행 부분을 찾아 아래 코드로 변경
+document.addEventListener('DOMContentLoaded', () => {
+    handleUrlRoute();
+    loadPosts(); // 로컬스토리지 대신 서버에서 불러오기 실행
+});
 
        // --- 2. SPA 라우팅 (URL 공유 기능 적용) ---
         function navigate(pageId, isHistoryBack = false) {
