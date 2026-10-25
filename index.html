@@ -521,8 +521,17 @@
             localStorage.setItem('juyeon_posts', JSON.stringify(mockPosts));
         }
 
-        // --- 2. SPA 라우팅 ---
-        function navigate(pageId) {
+       // --- 2. SPA 라우팅 (URL 공유 기능 적용) ---
+        function navigate(pageId, isHistoryBack = false) {
+            if (!isHistoryBack) {
+                // 주소창 URL 업데이트 (공유 가능한 링크 만들기)
+                if (pageId === 'home') {
+                    history.pushState(null, '', window.location.pathname);
+                } else {
+                    history.pushState(null, '', '?' + pageId); // 예: ?portfolio
+                }
+            }
+
             document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
             document.getElementById('page-' + pageId).classList.add('active');
             window.scrollTo(0, 0);
@@ -569,7 +578,12 @@
             });
         }
 
-        function viewPost(postId) {
+        function viewPost(postId, isHistoryBack = false) {
+            if (!isHistoryBack) {
+                // 게시물을 클릭하면 주소창에 ?post=게시물번호 형태로 부여
+                history.pushState(null, '', '?post=' + postId);
+            }
+
             const post = mockPosts.find(p => p.id === postId);
             if(post) {
                 document.getElementById('detail-category').textContent = post.category;
@@ -581,9 +595,37 @@
                 document.getElementById('detail-image').src = post.image;
                 document.getElementById('detail-content').innerHTML = post.content || `<p>${post.summary}</p>`;
                 
-                navigate('post-detail');
+                // navigate('post-detail') 대신 직접 제어 (URL 덮어쓰기 방지)
+                document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+                document.getElementById('page-post-detail').classList.add('active');
+                window.scrollTo(0, 0);
+            } else {
+                alert('존재하지 않거나 삭제된 게시물입니다.');
+                navigate('portfolio');
             }
         }
+
+        // URL 주소를 분석해서 맞는 화면을 띄워주는 함수 (공유 링크 접속 시 실행)
+        function handleUrlRoute() {
+            const query = window.location.search; // 예: ?post=123, ?portfolio
+            
+            if (query.startsWith('?post=')) {
+                const postId = query.replace('?post=', '');
+                viewPost(postId, true);
+            } else if (query === '?portfolio') {
+                navigate('portfolio', true);
+            } else if (query === '?admin') {
+                navigate('admin', true);
+            } else {
+                navigate('home', true);
+            }
+        }
+
+        // 뒤로가기/앞으로가기 화살표 클릭 시 화면 전환 처리
+        window.addEventListener('popstate', handleUrlRoute);
+
+        // 사이트 최초 접속 시 URL 확인
+        document.addEventListener('DOMContentLoaded', handleUrlRoute);
 
         setTimeout(renderHomePosts, 100);
 
